@@ -302,7 +302,7 @@ conntrack -E -o extended $conntrackargs | while read -r line; do
 
         # Send notification using notify-send
         if [ "$NOTIFY_SEND_USER" != false ]; then
-            sudo -u "$USER" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u "$NOTIFY_SEND_USER")/bus" notify-send --icon="$notify_icon" "conntrack.sh @$(hostname)" "$log_line" 2>/dev/null
+            sudo -u "$NOTIFY_SEND_USER" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u "$NOTIFY_SEND_USER")/bus" notify-send --icon="$notify_icon" "conntrack.sh @$(hostname)" "$log_line" 2>/dev/null
         fi
 
         # Send notification to all terminals using wall
