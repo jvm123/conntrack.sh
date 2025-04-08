@@ -28,15 +28,6 @@ for dep in "${DEPENDENCIES[@]}"; do
     fi
 done
 
-# Copy configuration file to /etc/
-echo "Copying $CONF_FILE to $CONF_DEST..."
-if cp "$CONF_FILE" "$CONF_DEST"; then
-    echo "Configuration file installed successfully."
-else
-    echo "Failed to install configuration file at $CONF_DEST."
-    exit 1
-fi
-
 # Copy shell script to /usr/bin/
 echo "Copying $SCRIPT_FILE to $SCRIPT_DEST..."
 if cp "$SCRIPT_FILE" "$SCRIPT_DEST"; then
@@ -54,6 +45,22 @@ if cp "$SCRIPT_FILE2" "$SCRIPT_DEST2"; then
     echo "Shell script $SCRIPT_FILE2 installed successfully."
 else
     echo "Failed to install shell script at $SCRIPT_DEST2."
+    exit 1
+fi
+# Copy configuration file to /etc/ with confirmation
+if [ -f "$CONF_DEST" ]; then
+    read -p "$CONF_DEST already exists. Overwrite? [y/N]: " confirm
+    if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
+        echo "Skipping configuration file installation."
+        exit 0
+    fi
+fi
+
+echo "Copying $CONF_FILE to $CONF_DEST..."
+if cp "$CONF_FILE" "$CONF_DEST"; then
+    echo "Configuration file installed successfully."
+else
+    echo "Failed to install configuration file at $CONF_DEST."
     exit 1
 fi
 
