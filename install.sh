@@ -49,7 +49,7 @@ else
 fi
 # Copy configuration file to /etc/ with confirmation
 if [ -f "$CONF_DEST" ]; then
-    read -p "$CONF_DEST already exists. Overwrite? [y/N]: " confirm
+    read -p -r "$CONF_DEST already exists. Overwrite? [y/N]: " confirm
     if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
         echo "Skipping configuration file installation."
         exit 0
