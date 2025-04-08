@@ -7,7 +7,7 @@
 ## Default confoguration
 
 # User who shall receive notify-send messages (use false if you want to turn off notifications)
-NOTIFY_SEND_USER="`whoami`"
+NOTIFY_SEND_USER="$(whoami)"
 
 # Define your whitelist of process names
 WHITELISTED_PROCESSES=("firefox" "ssh" "thunderbird")
@@ -40,13 +40,13 @@ LOGFILE="/var/log/conntrack_sh.log"
 NETSTAT_FILE="/tmp/conntrack_sh_netstat.log"
 
 # Temporary file for storing process IDs of processes we reported before
-PID_DOUBLES_FILE="`mktemp`"
+PID_DOUBLES_FILE="$(mktemp)"
 
 # Temporary file for storing remote IPs we reported before
-IP_DOUBLES_FILE="`mktemp`"
+IP_DOUBLES_FILE="$(mktemp)"
 
 # Have a temporary file for storing immediate doubles
-FILTER_DOUBLES_FILE="`mktemp`"
+FILTER_DOUBLES_FILE="$(mktemp)"
 
 ## Load config file
 CONFIG_FILE="/etc/conntrack_sh.conf"
@@ -185,7 +185,7 @@ else
     conntrackargs="--proto tcp"
 fi
 
-conntrack -E -o extended $conntrackargs | while read -r line; do
+conntrack -E -o extended "$conntrackargs" | while read -r line; do
     # Only process new connections
     #if [[ "$line" == *"[NEW]"* ]]; then
         ## Extract source and destination information
@@ -208,9 +208,9 @@ conntrack -E -o extended $conntrackargs | while read -r line; do
         fi
 
         ## Do not show immediate doubles
-        last_double=$(cat $FILTER_DOUBLES_FILE)
+        last_double=$(cat "$FILTER_DOUBLES_FILE")
         filter_info="$pid $proto $src_ip:$src_port -> $dst_ip" # Often we have doubles with same remote src_port and varying local dst_port, so dst_port is not used for filtering
-        echo "$filter_info" > $FILTER_DOUBLES_FILE
+        echo "$filter_info" > "$FILTER_DOUBLES_FILE"
         if [ "$last_double" = "$filter_info" ]; then
             continue
         fi
@@ -243,7 +243,7 @@ conntrack -E -o extended $conntrackargs | while read -r line; do
             fi
 
             # Check if src_port or dst_port is in CRITICAL_PORTS
-            if [[ " ${CRITICAL_PORTS[*]} " =~ " ${src_port} " ]] || [[ " ${CRITICAL_PORTS[*]} " =~ " ${dst_port} " ]]; then
+            if [[ " ${CRITICAL_PORTS[*]} " =~ ${src_port} ]] || [[ " ${CRITICAL_PORTS[*]} " =~ ${dst_port} ]]; then
                 # Highlight console line in orange
                 echo -en "\033[1;33m"  # Orange color
                 echo -n "! "
@@ -270,10 +270,10 @@ conntrack -E -o extended $conntrackargs | while read -r line; do
             fi
 
             log_line="${timestamp} - ${proto} - ${src_ip}:${src_port} (org: ${org_name}) -> ${dst_ip}:${dst_port} - Process: ${process_name} (PID: ${src_pid})"
-            echo "$src_pid/$process_name" >> $PID_DOUBLES_FILE
+            echo "$src_pid/$process_name" >> "$PID_DOUBLES_FILE"
         elif [ "$SHOW_UNKNOWN_PROCESSES" = true ]; then
             # Check if src_port or dst_port is in CRITICAL_PORTS
-            if [[ " ${CRITICAL_PORTS[*]} " =~ " ${src_port} " ]] || [[ " ${CRITICAL_PORTS[*]} " =~ " ${dst_port} " ]]; then
+            if [[ " ${CRITICAL_PORTS[*]} " =~ ${src_port} ]] || [[ " ${CRITICAL_PORTS[*]} " =~ ${dst_port} ]]; then
                 echo -en "\033[1;31m"  # Red color
                 echo -n "!! "
                 
@@ -294,18 +294,18 @@ conntrack -E -o extended $conntrackargs | while read -r line; do
 #        # Log the line to the log file and show it in the console
         echo "$log_line" >> "$LOGFILE"
         echo -en "\t"
-        echo $log_line
+        echo "$log_line"
         # Reset console color
         echo -en "\033[0m"
 
         # Send notification using notify-send
         if [ "$NOTIFY_SEND_USER" != false ]; then
-            sudo -u "$USER" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u "$NOTIFY_SEND_USER")/bus notify-send --icon=$notify_icon "conntrack.sh @`hostname`" "$log_line" 2>/dev/null
+            sudo -u "$USER" DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u "$NOTIFY_SEND_USER")/bus" notify-send --icon="$notify_icon" "conntrack.sh @$(hostname)" "$log_line" 2>/dev/null
         fi
 
         # Send notification to all terminals using wall
         if [ "$BROADCAST" = true ]; then
-            echo "conntrack.sh @`hostname`: $log_line" | wall 2>/dev/null
+            echo "conntrack.sh @$(hostname): $log_line" | wall 2>/dev/null
         fi
     #fi
 done

@@ -96,7 +96,7 @@ case "$ACTION" in
                         "$line"
 
             if [ "$BROADCAST" = true ]; then
-                echo "conntrack.sh @`hostname`: $line" | wall 2>/dev/null
+                echo "conntrack.sh @$(hostname): $line" | wall 2>/dev/null
             fi
         done
 
