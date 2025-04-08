@@ -1,4 +1,8 @@
 #!/bin/bash
+## conntrack_ssh.sh: Convenience wrapper to run or monitor conntrack.sh on a remote host via SSH and notify the user of its output locally.
+
+#set -x
+
 # Function to determine notification icon based on log content
 get_notification_icon() {
     local line="$1"
@@ -42,8 +46,10 @@ BROADCAST=false
 # Define source and destination paths
 CONF_FILE="conntrack_sh.conf"
 SCRIPT_FILE="conntrack.sh"
+SCRIPT_FILE2="conntrack_ssh.sh"
 CONF_DEST="/etc/$CONF_FILE"
 SCRIPT_DEST="/usr/bin/$SCRIPT_FILE"
+SCRIPT_DEST2="/usr/bin/$SCRIPT_FILE2"
 
 ## Load config file
 CONFIG_FILE="/etc/conntrack_sh.conf"
@@ -57,7 +63,8 @@ case "$ACTION" in
         echo "Installing conntrack.sh and configuration on $REMOTE_HOST..."
 
         # Copy the script and configuration file to the remote host
-        scp "$SCRIPT_DIR/conntrack_ssh.sh" "$REMOTE_HOST:$SCRIPT_DEST" || { echo "Failed to copy script to $REMOTE_HOST. Ensure you have the correct permissions."; exit 1; }
+        scp "$SCRIPT_DIR/$SCRIPT_FILE" "$REMOTE_HOST:$SCRIPT_DEST" || { echo "Failed to copy script to $REMOTE_HOST. Ensure you have the correct permissions."; exit 1; }
+        scp "$SCRIPT_DIR/$SCRIPT_FILE2" "$REMOTE_HOST:$SCRIPT_DEST2" || { echo "Failed to copy script to $REMOTE_HOST. Ensure you have the correct permissions."; exit 1; }
         scp /etc/conntrack_sh.conf "$REMOTE_HOST:$CONF_DEST" || { echo "Failed to copy configuration file to $REMOTE_HOST. Ensure you have the correct permissions."; exit 1; }
 
         # Set executable permissions for the script
