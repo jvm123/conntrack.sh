@@ -47,8 +47,10 @@ Description=conntrack.sh
 After=network.target
 
 [Service]
-Type=oneshot
+Type=simple
 ExecStart=/usr/bin/conntrack.sh
+Restart=always
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
