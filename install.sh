@@ -46,12 +46,22 @@ if [[ "$1" == "--systemd" ]]; then
     echo "After changing the configuration, manually restart it with $ systemctl restart $SYSTEMD_FILE"
     exit 0
 fi
-
 # Confirm that dependencies are installed
 for dep in "${DEPENDENCIES[@]}"; do
     if ! command -v "$dep" &> /dev/null; then
-        echo "Dependency $dep is not installed. Please install it and try again."
-        exit 1
+        echo "Dependency $dep is not installed."
+        if [ -f "/etc/debian_version" ]; then
+            echo "Attempting to install $dep via apt..."
+            if apt-get update && apt-get install -y "$dep"; then
+                echo "$dep installed successfully."
+            else
+                echo "Failed to install $dep. Please install it manually and try again."
+                exit 1
+            fi
+        else
+            echo "Please install $dep manually and try again."
+            exit 1
+        fi
     fi
 done
 
