@@ -113,6 +113,8 @@ A helper script `conntrack_ssh.sh` is included for convenience. With it, network
 
 ## Alternatives
 
+You can always get more logs and smarter filtering with existing tools.
+
 - tcpdump -i eth0 -A
 - strace
 - nethogs

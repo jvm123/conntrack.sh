@@ -1,5 +1,5 @@
 #!/bin/bash
-# conntrack.sh - Monitor network connections for suspicious activity log non-whitelisted processes
+# conntrack.sh - Monitor network connections for suspicious activity
 
 # print every command before executing it
 #set -x
