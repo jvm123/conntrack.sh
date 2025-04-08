@@ -88,6 +88,12 @@ You can always get more logs and smarter filtering with existing tools.
 - nethogs
 - [conntrack-logger](https://github.com/mk-fg/conntrack-logger)
 
+## TODO
+
+- Reintroduce host name resolution / whois output
+- Confirm ways to increase success rate in determination of process name
+- Become more flexible with the filter configuration
+
 ## References
 
 - [conntrack](https://conntrack-tools.netfilter.org/manual.html#conntrack): A tool for managing and monitoring network connections.
