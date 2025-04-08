@@ -29,44 +29,10 @@
    - Copy the main script to `/usr/bin/conntrack.sh`.
    - Copy the ssh convenience script to `/usr/bin/conntrack_ssh.sh`.
 
-## Autostart
-
-Below is how to configure systemd to automatically run the script at boot. This is applicable for Linux systems that use systemd, such as Ubuntu.
-
-Create a new systemd service:
-
-```bash
-sudo nano /etc/systemd/system/conntrack.service
-```
-
-with the following contents:
-
-```ini
-[Unit]
-Description=conntrack.sh
-After=network.target
-
-[Service]
-Type=simple
-ExecStart=/usr/bin/conntrack.sh
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Enable the service to run at boot:
-
-```bash
-sudo systemctl enable conntrack.service
-```
-
-And start it manually the first time:
-
-```bash
-sudo systemctl start conntrack.service
-```
+4. To configure autostart at boot on Ubuntu, run
+   ```bash
+   sudo ./install.sh --systemd
+   ```
 
 ## Usage
 Run the script with optional parameters:

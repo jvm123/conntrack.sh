@@ -20,6 +20,33 @@ DEPENDENCIES=(
     "ssh"
 )
 
+# Command-line arguments: -h, --help, --systemd
+if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+    echo "Usage: $0 [--systemd]"
+    echo "  --systemd: Install systemd service"
+    exit 0
+fi
+if [[ "$1" == "--systemd" ]]; then
+    echo "Installing systemd service..."
+    SYSTEMD_FILE="conntrack.service"
+    SYSTEMD_DEST="/etc/systemd/system/$SYSTEMD_FILE"
+    
+    # Copy systemd service file
+    if cp "$SYSTEMD_FILE" "$SYSTEMD_DEST"; then
+        echo "Systemd service installed successfully."
+    else
+        echo "Failed to install systemd service."
+        exit 1
+    fi
+
+    # Enable and start the service
+    systemctl enable "$SYSTEMD_FILE"
+    systemctl start "$SYSTEMD_FILE"
+    echo "Systemd service started. It should autostart on boot in future."
+    echo "After changing the configuration, manually restart it with $ systemctl restart $SYSTEMD_FILE"
+    exit 0
+fi
+
 # Confirm that dependencies are installed
 for dep in "${DEPENDENCIES[@]}"; do
     if ! command -v "$dep" &> /dev/null; then
@@ -28,7 +55,6 @@ for dep in "${DEPENDENCIES[@]}"; do
     fi
 done
 
-# Copy shell script to /usr/bin/
 echo "Copying $SCRIPT_FILE to $SCRIPT_DEST..."
 if cp "$SCRIPT_FILE" "$SCRIPT_DEST"; then
     chmod +x "$SCRIPT_DEST"
@@ -38,7 +64,6 @@ else
     exit 1
 fi
 
-# Copy 2md shell script to /usr/bin/
 echo "Copying $SCRIPT_FILE2 to $SCRIPT_DEST..."
 if cp "$SCRIPT_FILE2" "$SCRIPT_DEST2"; then
     chmod +x "$SCRIPT_DEST2"
@@ -47,9 +72,10 @@ else
     echo "Failed to install shell script at $SCRIPT_DEST2."
     exit 1
 fi
+
 # Copy configuration file to /etc/ with confirmation
 if [ -f "$CONF_DEST" ]; then
-    read -p -r "$CONF_DEST already exists. Overwrite? [y/N]: " confirm
+    read -p "$CONF_DEST already exists. Overwrite? [y/N]: " confirm
     if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
         echo "Skipping configuration file installation."
         exit 0
