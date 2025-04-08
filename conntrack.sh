@@ -51,6 +51,7 @@ FILTER_DOUBLES_FILE="$(mktemp)"
 ## Load config file
 CONFIG_FILE="/etc/conntrack_sh.conf"
 if [ -f "$CONFIG_FILE" ]; then
+    # shellcheck source=conntrack_sh.conf
     source "$CONFIG_FILE"
 fi
 

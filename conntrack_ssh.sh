@@ -48,6 +48,7 @@ SCRIPT_DEST="/usr/bin/$SCRIPT_FILE"
 ## Load config file
 CONFIG_FILE="/etc/conntrack_sh.conf"
 if [ -f "$CONFIG_FILE" ]; then
+    # shellcheck source=conntrack_sh.conf
     source "$CONFIG_FILE"
 fi
 
@@ -60,6 +61,7 @@ case "$ACTION" in
         scp /etc/conntrack_sh.conf "$REMOTE_HOST:$CONF_DEST" || { echo "Failed to copy configuration file to $REMOTE_HOST. Ensure you have the correct permissions."; exit 1; }
 
         # Set executable permissions for the script
+        # shellcheck disable=SC2029
         ssh "$REMOTE_HOST" "chmod +x $SCRIPT_DEST" || { echo "Failed to set executable permissions on $REMOTE_HOST. Ensure you have the correct permissions."; exit 1; }
 
         echo "Installation completed on $REMOTE_HOST."
@@ -76,7 +78,7 @@ case "$ACTION" in
         fi
 
         # Execute the command on the remote host and process its output
-        ssh -o ServerAliveInterval=60 "$REMOTE_HOST" "$remote_command" | while IFS= read -r line; do
+        if ! ssh -o ServerAliveInterval=60 "$REMOTE_HOST" "$remote_command" | while IFS= read -r line; do
             # Skip empty lines
             [ -z "$line" ] && continue
             
@@ -98,10 +100,7 @@ case "$ACTION" in
             if [ "$BROADCAST" = true ]; then
                 echo "conntrack.sh @$(hostname): $line" | wall 2>/dev/null
             fi
-        done
-
-        # Error handling
-        if [ $? -ne 0 ]; then
+        done; then
             echo "Lost connection to $REMOTE_HOST"
             exit 1
         fi
