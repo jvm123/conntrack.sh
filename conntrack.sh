@@ -186,7 +186,8 @@ else
     conntrackargs="--proto tcp"
 fi
 
-conntrack -E -o extended "$conntrackargs" | while read -r line; do
+# shellcheck disable=SC2086
+conntrack -E -o extended $conntrackargs | while read -r line; do
     # Only process new connections
     #if [[ "$line" == *"[NEW]"* ]]; then
         ## Extract source and destination information
