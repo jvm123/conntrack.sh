@@ -112,6 +112,7 @@ A helper script `conntrack_ssh.sh` is included for convenience. With it, network
 - May generate false positives if the configuration is not properly tuned.
 - May overlook a lot of stuff, as it is a convenience wrapper that tries to filter "uninteresting" activities. This comes with the risk of overlooking some connections.
 - Sees only those network connections that `conntrack` sees. E.g., if nftables is not set up appropriately, all or only IPv6 traffic may go unreported.
+- Events can sometimes show up with a considerable delay, which complicates testing a bit.
 
 ## Alternatives
 
