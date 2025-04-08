@@ -7,9 +7,9 @@
 
 ## Features
 - Monitors network connections in real-time using the conntrack tool.
-- Logs non-whitelisted processes and remote IPs.
-- Filters log entries aggressively, to reduce the output to a level where it is sustainable as a tool that can run continuously in the background.
-- Supports highlighting connections on critical TCP ports.
+- Filters log entries aggressively, to reduce the output to a level where it is sustainable as a tool that can run continuously in the background. Configurable process name and IP whitelists.
+- Logs remote IPs / ports that connections were established with. Tries to identify the process name making that initiated the connection.
+- Supports highlighting connections as critical, based on configurable TCP ports.
 - Send desktop notifications.
 - Configurable via a configuration file.
 
@@ -69,7 +69,6 @@ sudo systemctl start conntrack.service
 ```
 
 ## Usage
-
 Run the script with optional parameters:
 ```bash
 sudo conntrack.sh [options]
