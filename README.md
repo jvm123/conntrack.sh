@@ -3,7 +3,7 @@
 ![License](https://img.shields.io/github/license/jvm123/conntrack.sh?cache-control=no-cache)
 ![ShellCheck](https://github.com/jvm123/conntrack.sh/actions/workflows/shellcheck.yml/badge.svg)
 
-`conntrack.sh` is a shell script designed to facilitate the continuous manual monitoring of network connections for suspicious activity. It wraps the conntrack utility specifically for this use case and uses some aggressive filering to reduce the number of logged events. Notifications can be logged, shown on the console and optionally sent as terminal broadcast message or as desktop notification via notifdy-send.
+`conntrack.sh` is a shell script designed to facilitate the continuous manual monitoring of network connections for suspicious activity. It wraps the conntrack utility specifically for this use case and uses some aggressive filering to reduce the number of logged events. Notifications can be logged, shown on the console and optionally sent as terminal broadcast message or as desktop notification via notify-send.
 
 ## Features
 - Monitors network connections in real-time using the conntrack tool.
