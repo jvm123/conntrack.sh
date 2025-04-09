@@ -9,11 +9,13 @@ if [ "$EUID" -ne 0 ]; then
 fi
 # Define source and destination paths
 CONF_FILE="conntrack_sh.conf"
-SCRIPT_FILE="conntrack.sh"
-SCRIPT_FILE2="conntrack_ssh.sh"
 CONF_DEST="/etc/$CONF_FILE"
+SCRIPT_FILE="conntrack.sh"
 SCRIPT_DEST="/usr/bin/$SCRIPT_FILE"
+SCRIPT_FILE2="conntrack_ssh.sh"
 SCRIPT_DEST2="/usr/bin/$SCRIPT_FILE2"
+SYSTEMD_FILE="conntrack.service"
+SYSTEMD_DEST="/etc/systemd/system/$SYSTEMD_FILE"
 DEPENDENCIES=(
     "conntrack"
     "netstat"
@@ -28,24 +30,28 @@ if [[ "$1" == "-h" || "$1" == "--help" ]]; then
 fi
 if [[ "$1" == "--systemd" ]]; then
     echo "Installing systemd service..."
-    SYSTEMD_FILE="conntrack.service"
-    SYSTEMD_DEST="/etc/systemd/system/$SYSTEMD_FILE"
     
     # Copy systemd service file
-    if cp "$SYSTEMD_FILE" "$SYSTEMD_DEST"; then
-        echo "Systemd service installed successfully."
-    else
-        echo "Failed to install systemd service."
+    if ! cp "$SYSTEMD_FILE" "$SYSTEMD_DEST"; then
+        echo "Failed to copy to $SYSTEMD_DEST."
         exit 1
     fi
 
     # Enable and start the service
-    systemctl enable "$SYSTEMD_FILE"
-    systemctl start "$SYSTEMD_FILE"
+    if ! systemctl enable "$SYSTEMD_FILE"; then
+        echo "Failed to enable $SYSTEMD_FILE."
+        exit 1
+    fi
+    echo "Systemd service $SYSTEMD_FILE installed successfully."
+    if ! systemctl start "$SYSTEMD_FILE"; then
+        echo "Failed to start $SYSTEMD_FILE."
+        exit 1
+    fi
     echo "Systemd service started. It should autostart on boot in future."
     echo "After changing the configuration, manually restart it with $ systemctl restart $SYSTEMD_FILE"
     exit 0
 fi
+
 # Confirm that dependencies are installed
 for dep in "${DEPENDENCIES[@]}"; do
     if ! command -v "$dep" &> /dev/null; then

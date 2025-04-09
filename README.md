@@ -64,7 +64,7 @@ The script uses a configuration file located at `/etc/conntrack_sh.conf`. Below 
 
 ## Monitoring remote systems
 
-A helper script `conntrack_ssh.sh` is included for convenience. With it, network traffic on remote systems can be monitored as well. You could have done this without this helper script, its primary use case is to create notify-send messages for events on the remote system as well.
+A helper script `conntrack_ssh.sh` is included for convenience. With it, network traffic on remote systems can be monitored as well. You could have done this without this helper script, its primary use case is to create local notify-send messages for events that were recorded on the remote system.
 
 - `-h, --help`: Display help message
 - `--install user@hostname"`: Install the script and config file remotely
