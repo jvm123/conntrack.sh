@@ -5,6 +5,8 @@
 
 `conntrack.sh` is a shell script designed to facilitate the continuous manual monitoring of network connections for suspicious activity. It wraps the conntrack utility specifically for this use case and uses some aggressive filering to reduce the number of logged events. Notifications can be logged, shown on the console and optionally sent as terminal broadcast message or as desktop notification via notify-send.
 
+This is especially useful on a developer system, to observe anomalies during the testing of not fully trusted applications or libraries.
+
 ## Features
 - Monitors network connections in real-time using the conntrack tool.
 - Filters log entries aggressively, to reduce the output to a level where it is sustainable as a tool that can run continuously in the background. Configurable process name and IP whitelists.
@@ -49,10 +51,13 @@ The parameters include
 - `--proto-all=[true|false]`: Include all protocols (instead of just TCP).
 - `--filter-critical=[true|false]`: Only show connections on critical ports.
 
+A log file is written to `/var/log/conntrack_sh.log`.
+
 ## Configuration
 
 The script uses a configuration file located at `/etc/conntrack_sh.conf`. Below are the configurable options:
 
+- **LOGFILE**: Log file path
 - **WHITELISTED_PROCESSES**: Array of process names to whitelist (e.g., `("firefox" "ssh")`).
 - **WHITELISTED_REMOTE_IPS**: Array of remote IPs to whitelist.
 - **CRITICAL_PORTS**: Array of critical ports to monitor (e.g., `("80" "443")`).
