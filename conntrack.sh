@@ -9,13 +9,13 @@
 # User who shall receive notify-send messages (use false if you want to turn off notifications)
 NOTIFY_SEND_USER="$(whoami)"
 
-# Define your whitelist of process names
+# Whitelist of process names
 WHITELISTED_PROCESSES=("firefox" "ssh" "thunderbird")
 
-# Define your whitelisted remote IPs
+# Whitelisted remote IPs
 WHITELISTED_REMOTE_IPS=()
 
-# Define critical ports
+# Critical ports
 CRITICAL_PORTS=("80" "443")
 
 # Show unknown processes
@@ -33,7 +33,7 @@ CRITICAL_ONLY=false
 # Broadcast notifications to all terminals
 BROADCAST=false
 
-# Log file for non-whitelisted processes
+# Log file
 LOGFILE="/var/log/conntrack_sh.log"
 
 # Temporary file for netstat output
